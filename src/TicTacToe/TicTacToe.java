@@ -3,6 +3,10 @@ package TicTacToe;
 
 import java.util.Scanner;
 
+
+
+
+
 public class TicTacToe {
 
     // The grid where the game is played, represented as a 2D array
@@ -16,6 +20,7 @@ public class TicTacToe {
     private static char currentPlayer = PLAYER_X;
 
     public static void main(String[] args) {
+
         // Initialize the grid with empty spaces
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -23,28 +28,78 @@ public class TicTacToe {
             }
         }
 
+        // Create Scanner once
+        Scanner scanner = new Scanner(System.in);
+
         // Start the game loop
         while (true) {
+
             // Print the grid
             printGrid();
 
             // Prompt the current player to make a move
-            System.out.println("Player " + currentPlayer + ", enter your move (row, col): ");
-            Scanner scanner = new Scanner(System.in);
-            int row = scanner.nextInt();
-            int col = scanner.nextInt();
+            System.out.println("Player " + currentPlayer
+                    + ", enter your move (row, col): ");
+
+            int row;
+            int col;
+
+            // Keep asking until a valid move is entered
+            while (true) {
+
+                System.out.print("Enter row and column (0-2): ");
+
+                // Check if row is a number
+                if (!scanner.hasNextInt()) {
+                    System.out.println(
+                            "Invalid input. Please enter numbers.");
+                    scanner.nextLine();
+                    continue;
+                }
+
+                row = scanner.nextInt();
+
+                // Check if column is a number
+                if (!scanner.hasNextInt()) {
+                    System.out.println(
+                            "Invalid input. Please enter two numbers.");
+                    scanner.nextLine();
+                    continue;
+                }
+
+                col = scanner.nextInt();
+
+                // Check if row and column are between 0 and 2
+                if (row < 0 || row > 2 || col < 0 || col > 2) {
+                    System.out.println(
+                            "Invalid position. Row and column must be 0-2.");
+                    continue;
+                }
+
+                // Check if the position is already occupied
+                if (grid[row][col] != ' ') {
+                    System.out.println(
+                            "That position is already taken.");
+                    continue;
+                }
+
+                // Valid move
+                break;
+            }
 
             // Update the grid with the player's move
             grid[row][col] = currentPlayer;
 
             // Check if the game is over
             if (isGameOver()) {
+
                 // Print the final grid
                 printGrid();
 
                 // Print the winner (if any)
                 if (hasWinner()) {
-                    System.out.println("Player " + currentPlayer + " wins!");
+                    System.out.println(
+                            "Player " + currentPlayer + " wins!");
                 } else {
                     System.out.println("It's a tie!");
                 }
@@ -54,35 +109,50 @@ public class TicTacToe {
             }
 
             // Switch to the other player
-            currentPlayer = (currentPlayer == PLAYER_X) ? PLAYER_O : PLAYER_X;
+            currentPlayer = (currentPlayer == PLAYER_X)
+                    ? PLAYER_O
+                    : PLAYER_X;
         }
+
+        scanner.close();
     }
 
     // Print the grid to the console
     private static void printGrid() {
+
         for (int i = 0; i < 3; i++) {
+
             for (int j = 0; j < 3; j++) {
+
                 System.out.print(grid[i][j]);
+
                 if (j < 2) {
                     System.out.print("|");
                 }
             }
+
             System.out.println();
+
             if (i < 2) {
                 System.out.println("-+-+-");
             }
         }
     }
 
-    // Check if the game is over (i.e. someone has won or there are no more empty spaces)
+    // Check if the game is over
+    // (i.e. someone has won or there are no more empty spaces)
     private static boolean isGameOver() {
+
         return hasWinner() || isFull();
     }
 
-    // Check if there is a winner (i.e. someone has three marks in a row)
+    // Check if there is a winner
+    // (i.e. someone has three marks in a row)
     private static boolean hasWinner() {
+
         // Check for horizontal wins
         for (int i = 0; i < 3; i++) {
+
             if (isRowWin(i)) {
                 return true;
             }
@@ -90,6 +160,7 @@ public class TicTacToe {
 
         // Check for vertical wins
         for (int i = 0; i < 3; i++) {
+
             if (isColWin(i)) {
                 return true;
             }
@@ -106,33 +177,49 @@ public class TicTacToe {
 
     // Check if the given row has a winning combination
     private static boolean isRowWin(int row) {
-        return (grid[row][0] != ' ' && grid[row][0] == grid[row][1] && grid[row][1] == grid[row][2]);
+
+        return grid[row][0] != ' '
+                && grid[row][0] == grid[row][1]
+                && grid[row][1] == grid[row][2];
     }
 
     // Check if the given column has a winning combination
     private static boolean isColWin(int col) {
-        return (grid[0][col] != ' ' && grid[0][col] == grid[1][col] && grid[1][col] == grid[2][col]);
+
+        return grid[0][col] != ' '
+                && grid[0][col] == grid[1][col]
+                && grid[1][col] == grid[2][col];
     }
 
     // Check if the first diagonal has a winning combination
     private static boolean isDiag1Win() {
-        return (grid[0][0] != ' ' && grid[0][0] == grid[1][1] && grid[1][1] == grid[2][2]);
+
+        return grid[0][0] != ' '
+                && grid[0][0] == grid[1][1]
+                && grid[1][1] == grid[2][2];
     }
 
     // Check if the second diagonal has a winning combination
     private static boolean isDiag2Win() {
-        return (grid[0][2] != ' ' && grid[0][2] == grid[1][1] && grid[1][1] == grid[2][0]);
+
+        return grid[0][2] != ' '
+                && grid[0][2] == grid[1][1]
+                && grid[1][1] == grid[2][0];
     }
 
     // Check if there are no more empty spaces in the grid
     private static boolean isFull() {
+
         for (int i = 0; i < 3; i++) {
+
             for (int j = 0; j < 3; j++) {
+
                 if (grid[i][j] == ' ') {
                     return false;
                 }
             }
         }
+
         return true;
     }
 }
